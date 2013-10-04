@@ -1,0 +1,2 @@
+SVN_USER=""
+SVN_PASSWORD=""
