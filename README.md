@@ -20,10 +20,15 @@ scripts:
 
 Here's how I use these files.
 
-1. Copy Vagrantfile, provision_drupal.sh, provision_settings.sh and provision_personal.sh to a new directory.
+1. Copy Vagrantfile, provision_drupal.sh, provision_settings.sh and
+   provision_personal.sh to a new directory.
 1. Edit Vagrantfile changing the hostname and IP address of the VM.
-1. Optionally edit provision_settings.sh if I need to sensitive settings to the provision script.
-1. Set whatever vcs I'm using to ignore provision_settings.sh.
+1. Optionally edit provision_settings.sh if I need to sensitive
+   settings to the provision script.
+1. Set whatever version control sysetm I'm using to ignore
+   provision_settings.sh.
+1. Edit provision.sh and update variable, etc.
+1. Run "vagrant up".
 
 At this time the only provisioning script is the one I use for Drupal
 projects.
