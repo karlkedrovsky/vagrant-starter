@@ -25,7 +25,8 @@ TIMEZONE="America/Chicago" # can be altered to your specific timezone, see http:
 # Site information
 SOURCE_DIR_NAME=$HOSTNAME # this is a subdirectory under /var/www
 DOCROOT="/var/www/$HOSTNAME/htdocs"
-SVN_URL=""
+# Only set one of these (svn or git)
+# SVN_URL=""
 # GIT_URL=""
 SITE_NAME=$HOSTNAME
 
@@ -107,9 +108,9 @@ mv /tmp/www.conf /etc/php5/fpm/pool.d/www.conf
 service php5-fpm restart
 
 # Personal configuration
-if [ -e "/vagrant/personal_provision.sh" ]
+if [ -e "/vagrant/provision_personal.sh" ]
 then
-  source /vagrant/personal_provision.sh
+  source /vagrant/provision_personal.sh
 fi
 
 ##### Project Setup #####
@@ -117,8 +118,16 @@ fi
 echo "[vagrant provisioning] Checking out project..."
 mkdir -p /var/www
 chmod 777 /var/www
-svn co --username $SVN_USER --password $SVN_PASSWORD --non-interactive --trust-server-cert $SVN_URL /var/www/$SOURCE_DIR_NAME
-# git clone $GIT_URL /var/www/$SOURCE_DIR_NAME
+if [ ! -z "$SVN_UR"L ]
+then
+  svn co --username $SVN_USER --password $SVN_PASSWORD --non-interactive --trust-server-cert $SVN_URL /var/www/$SOURCE_DIR_NAME
+elif [ ! -z "$GIT_URL" ]
+then
+  git clone $GIT_URL /var/www/$SOURCE_DIR_NAME
+else
+  touch /var/www/$SOURCE_DIR_NAME
+fi
+chown -R vagrant:vagrant /var/www/$SOURCE_DIR_NAME
 
 echo "[vagrant provisioning] Setting up nginx..."
 cat <<EOF >/etc/nginx/sites-available/$SITE_NAME
