@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Provision.sh
+# Provision a VM for Drupal development using nginx, php-fpm and mysql.
 #
 # Shamelessly snarfed from Jurgen Verhasselt - https://github.com/sjugge
 
@@ -209,6 +209,18 @@ create database $SITE_NAME;
 grant all on $SITE_NAME.* to '$SITE_NAME'@'localhost' identified by '$SITE_NAME';
 flush privileges;
 EOF
+
+echo "[vagrant provisioning] Setting up nfs export..."
+mkdir -p /export/$SITE_NAME
+cat <<EOF >>/etc/exports
+/export 10.1.0.1/24(rw,fsid=root,no_subtree_check)
+/export/$SITE_NAME 10.1.0.1/24(rw,sync,all_squash,anonuid=1001,anongid=1001,no_subtree_check,insecure)
+EOF
+cat <<EOF >>/etc/fstab
+/var/www/$SOURCE_DIR_NAME    /export/$SITE_NAME   none    bind  0  0
+EOF
+mount -a
+service nfs-kernel-server restart
 
 ##### Provision check #####
 

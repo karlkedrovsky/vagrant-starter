@@ -1,6 +1,6 @@
 echo "[vagrant provisioning] Setting git config variables..."
-sudo -u vagrant git config --global user.name "Karl Kedrovsky"
-sudo -u vagrant git config --global user.email karl@kedrovsky.com
+sudo -u vagrant git config --file /home/vagrant/.gitconfig user.name "Karl Kedrovsky"
+sudo -u vagrant git config --file /home/vagrant/.gitconfig user.email karl@kedrovsky.com
 
 echo "[vagrant provisioning] Setting up custom config files..."
 sudo -u vagrant git clone -q https://github.com/karlkedrovsky/oh-my-zsh.git /home/vagrant/oh-my-zsh
