@@ -125,7 +125,7 @@ elif [ ! -z "$GIT_URL" ]
 then
   git clone $GIT_URL /var/www/$SOURCE_DIR_NAME
 else
-  touch /var/www/$SOURCE_DIR_NAME
+  mkdir /var/www/$SOURCE_DIR_NAME
 fi
 chown -R vagrant:vagrant /var/www/$SOURCE_DIR_NAME
 

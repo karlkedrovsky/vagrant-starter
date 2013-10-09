@@ -30,5 +30,8 @@ Here's how I use these files.
 1. Edit provision.sh and update variable, etc.
 1. Run "vagrant up".
 
-At this time the only provisioning script is the one I use for Drupal
-projects.
+There are three provision scripts so far for Drupal, Ruby and Node
+development. All three are very much works in progress and the only
+script I've used for "real work" is the Drupal version. The Ruby and
+Node scripts are pretty basic and I've only used them for the odd
+experiment or two.
