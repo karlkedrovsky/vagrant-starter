@@ -118,7 +118,7 @@ fi
 echo "[vagrant provisioning] Checking out project..."
 mkdir -p /var/www
 chmod 777 /var/www
-if [ ! -z "$SVN_UR"L ]
+if [ ! -z "$SVN_UR" ]
 then
   svn co --username $SVN_USER --password $SVN_PASSWORD --non-interactive --trust-server-cert $SVN_URL /var/www/$SOURCE_DIR_NAME
 elif [ ! -z "$GIT_URL" ]
