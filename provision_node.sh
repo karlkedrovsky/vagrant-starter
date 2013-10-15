@@ -28,7 +28,10 @@ DOCROOT="/var/www/$HOSTNAME"
 SITE_NAME=$HOSTNAME
 
 # Settings (e.g. svn username and password)
-source /vagrant/provision_settings.sh
+if [ -e "/vagrant/provision_settings.sh" ]
+then
+  source /vagrant/provision_settings.sh
+fi
 
 ##### Provision check ######
 
@@ -85,7 +88,7 @@ EOF
 echo "[vagrant provisioning] Project setup..."
 mkdir -p /var/www
 chmod 777 /var/www
-if [ ! -z "$SVN_UR" ]
+if [ ! -z "$SVN_URL" ]
 then
   svn co --username $SVN_USER --password $SVN_PASSWORD --non-interactive --trust-server-cert $SVN_URL /var/www/$SOURCE_DIR_NAME
 elif [ ! -z "$GIT_URL" ]

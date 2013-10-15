@@ -28,7 +28,10 @@ DOCROOT="/var/www/$HOSTNAME/htdocs"
 SITE_NAME=$HOSTNAME
 
 # Settings (e.g. svn username and password)
-source /vagrant/provision_settings.sh
+if [ -e "/vagrant/provision_settings.sh" ]
+then
+  source /vagrant/provision_settings.sh
+fi
 
 ##### Provision check ######
 
@@ -67,10 +70,15 @@ apt-get update
 apt-get install -y postgresql-9.3 postresql-contrib-9.3
 
 echo "[vagrant provisioning] Installing common packages..."
-apt-get install -y mg nginx keychain zsh subversion git curl nfs-kernel-server zip unzip
+apt-get install -y mg nginx keychain zsh subversion git curl nfs-kernel-server zip unzip sqlite
 
 echo "[vagrant provisioning] Installing rvm and ruby..."
 curl -L https://get.rvm.io | bash -s stable --ruby
+source /usr/local/rvm/scripts/rvm
+
+echo "[vagrant provisioning] Installing common ruby gems..."
+gem install bundler
+gem install rake
 
 ##### Configuration #####
 
@@ -97,7 +105,7 @@ fi
 # echo "[vagrant provisioning] Checking out project..."
 # mkdir -p /var/www
 # chmod 777 /var/www
-# if [ ! -z "$SVN_UR"L ]
+# if [ ! -z "$SVN_URL" ]
 # then
 #   svn co --username $SVN_USER --password $SVN_PASSWORD --non-interactive --trust-server-cert $SVN_URL /var/www/$SOURCE_DIR_NAME
 # elif [ ! -z "$GIT_URL" ]
