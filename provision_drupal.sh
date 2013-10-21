@@ -13,7 +13,7 @@
 HOSTNAME="changeme"
 
 # MySQL password
-MYSQL_PASS="root" # can be altered, though storing passwords in a script is a bad idea!
+MYSQL_ROOT_PASSORD="root" # can be altered, though storing passwords in a script is a bad idea!
 
 # Locale
 LOCALE_LANGUAGE="en_US" # can be altered to your prefered locale, see http://docs.moodle.org/dev/Table_of_locales
@@ -29,6 +29,9 @@ DOCROOT="/var/www/$HOSTNAME/htdocs"
 # SVN_URL=""
 # GIT_URL=""
 SITE_NAME=$HOSTNAME
+DB_NAME=$HOSTNAME
+DB_USER=$HOSTNAME
+DB_PASSWORD=$HOSTNAME
 
 # Settings (e.g. svn username and password)
 if [ -e "/vagrant/provision_settings.sh" ]
@@ -68,8 +71,8 @@ dpkg-reconfigure --frontend noninteractive tzdata
 
 echo "[vagrant provisioning] Installing mysql-server and mysql-client..."
 # Set MySQL root password and install MySQL. Info on unattended install: http://serverfault.com/questions/19367
-echo mysql-server mysql-server/root_password select $MYSQL_PASS | debconf-set-selections
-echo mysql-server mysql-server/root_password_again select $MYSQL_PASS | debconf-set-selections
+echo mysql-server mysql-server/root_password select $MYSQL_ROOT_PASSORD | debconf-set-selections
+echo mysql-server mysql-server/root_password_again select $MYSQL_ROOT_PASSORD | debconf-set-selections
 apt-get install -y mysql-server mysql-client
 service mysql restart
 
@@ -77,7 +80,7 @@ echo "[vagrant provisioning] Installing common packages..."
 apt-get install -y mg nginx php5-fpm php5-mysql php5-gd php5-curl php5-mcrypt php5-cli php-pear php-apc keychain zsh subversion git curl nfs-kernel-server zip unzip
 
 echo "[vagrant provisioning] Securing MySQL..."
-mysql -uroot -p$MYSQL_PASS mysql <<EOF
+mysql -uroot -p$MYSQL_ROOT_PASSORD mysql <<EOF
 drop user ''@'localhost';
 drop user ''@'vagrant-ubuntu-precise-64';
 drop user 'root'@'vagrant-ubuntu-precise-64';
@@ -140,6 +143,8 @@ server {
 
     access_log /var/log/nginx/$SITE_NAME-access.log;
     error_log /var/log/nginx/$SITE_NAME-error.log;
+
+    client_max_body_size 0;
 
     location = /favicon.ico {
         log_not_found off;
@@ -207,9 +212,9 @@ ln -s /etc/nginx/sites-available/$SITE_NAME /etc/nginx/sites-enabled/$SITE_NAME
 service nginx restart
 
 echo "[vagrant provisioning] Setting up mysql..."
-mysql -uroot -proot <<EOF
-create database $SITE_NAME;
-grant all on $SITE_NAME.* to '$SITE_NAME'@'localhost' identified by '$SITE_NAME';
+mysql -uroot -p$MYSQL_ROOT_PASSORD <<EOF
+create database $DB_NAME;
+grant all on $DB_NAME.* to '$DB_USER'@'localhost' identified by '$DB_PASSORD';
 flush privileges;
 EOF
 
