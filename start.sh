@@ -15,4 +15,10 @@ echo "Creating nfs mount..."
 if [[ ! -d ~/mount/MOUNT_NAME ]]; then
   mkdir ~/mount/MOUNT_NAME
 fi
-mount -t nfs MOUNT_NAME:/export/MOUNT_NAME ~/mount/MOUNT_NAME
+OS=`uname`
+if [[ $OS == 'Linux' ]]; then
+  mount ~/mount/MOUNT_NAME
+else
+  # assumes normal user can run mount (e.g. OS X)
+  mount -t nfs MOUNT_NAME:/export/MOUNT_NAME ~/mount/MOUNT_NAME
+fi

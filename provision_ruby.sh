@@ -75,6 +75,7 @@ apt-get install -y mg nginx keychain zsh subversion git curl nfs-kernel-server z
 echo "[vagrant provisioning] Installing rvm and ruby..."
 curl -L https://get.rvm.io | bash -s stable --ruby
 source /usr/local/rvm/scripts/rvm
+usermod -a -G rvm vagrant
 
 echo "[vagrant provisioning] Installing common ruby gems..."
 gem install bundler

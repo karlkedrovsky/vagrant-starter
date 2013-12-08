@@ -35,3 +35,19 @@ development. All three are very much works in progress and the only
 script I've used for "real work" is the Drupal version. The Ruby and
 Node scripts are pretty basic and I've only used them for the odd
 experiment or two.
+
+## Notes
+
+Mounting nfs shares exported by the VM works without any additional
+steps under OS X but under Linux you have to add something like the
+following to /etc/fstab.
+
+    10.1.0.14:/export/foo /home/karl/mount/foo nfs rw,noauto,user 0 0
+
+In this cast 10.1.0.14 is the ip of the VM, /export/foo is the
+exported directory in the VM and /home/karl/mount/foo is the directory
+on the host where the nfs share will be mounted. To mount the share
+after the VM is started just run:
+
+    mount /home/karl/mount/foo
+
