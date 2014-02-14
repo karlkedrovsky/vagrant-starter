@@ -89,19 +89,10 @@ drop database test;
 flush privileges;
 EOF
 
-echo "[vagrant provisioning] Installing composer..."
-curl -sS https://getcomposer.org/installer | php
-mv composer.phar /usr/local/bin/composer
-
 echo "[vagrant provisioning] Installing drush..."
-cd /usr/local
-git clone git@github.com:drush-ops/drush.git
-cd drush
-git checkout 6.x
-chmod a+x drush
-ln -s /usr/local/drush/drush /usr/local/bin/drush
-composer install
-cd
+pear install Console_Table
+pear channel-discover pear.drush.org
+pear install drush/drush
 
 ##### Configuration #####
 
@@ -153,6 +144,8 @@ server {
     access_log /var/log/nginx/$SITE_NAME-access.log;
     error_log /var/log/nginx/$SITE_NAME-error.log;
 
+    index index.php;
+
     client_max_body_size 0;
 
     location = /favicon.ico {
@@ -166,55 +159,24 @@ server {
         access_log off;
     }
 
-    # This matters if you use drush
-    location = /backup {
-        deny all;
-    }
-
-    # Very rarely should these ever be accessed outside of your lan
-    location ~* \.(txt|log)\$ {
-        allow 10.1.0.0/16;
-        deny all;
-    }
-
-    location ~ \..*/.*\.php\$ {
-        return 403;
-    }
-
     location / {
-        # This is cool because no php is touched for static content
-        try_files \$uri @rewrite;
+        # This is cool because no php is touched for static content.
+        # include the "?$args" part so non-default permalinks doesn't break when using query string
+        try_files $uri $uri/ /index.php?q=$uri$args;
     }
 
-    location @rewrite {
-        # Some modules enforce no slash (/) at the end of the URL
-        # Else this rewrite block wouldn't be needed (GlobalRedirect)
-        rewrite ^/(.*)\$ /index.php?q=\$1;
-    }
-
-    location ~ \.php\$ {
-        fastcgi_split_path_info ^(.+\.php)(/.+)\$;
+    location ~ \.php$ {
         #NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
         include fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-        fastcgi_param DRUPAL_CONFIG /var/www/nginx/drupal-config/;
         fastcgi_intercept_errors on;
         fastcgi_pass unix:/var/run/php-fpm.sock;
     }
 
-    # Fighting with ImageCache? This little gem is amazing.
-    location ~ ^/sites/.*/files/imagecache/ {
-        try_files \$uri @rewrite;
-    }
-    # Catch image styles for D7 too.
-    location ~ ^/sites/.*/files/styles/ {
-        try_files \$uri @rewrite;
-    }
-
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico)\$ {
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
         expires max;
         log_not_found off;
     }
+
 }
 EOF
 ln -s /etc/nginx/sites-available/$SITE_NAME /etc/nginx/sites-enabled/$SITE_NAME
