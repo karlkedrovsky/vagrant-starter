@@ -101,6 +101,7 @@ git checkout 6.x
 chmod a+x drush
 ln -s /usr/local/drush/drush /usr/local/bin/drush
 composer -n install
+drush help 1>/dev/null 2>&1
 cd -
 
 ##### Configuration #####
