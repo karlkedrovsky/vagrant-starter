@@ -95,13 +95,13 @@ mv composer.phar /usr/local/bin/composer
 
 echo "[vagrant provisioning] Installing drush..."
 cd /usr/local
-git clone git@github.com:drush-ops/drush.git
+git clone https://github.com/drush-ops/drush.git
 cd drush
 git checkout 6.x
 chmod a+x drush
 ln -s /usr/local/drush/drush /usr/local/bin/drush
-composer install
-cd
+composer -n install
+cd -
 
 ##### Configuration #####
 
