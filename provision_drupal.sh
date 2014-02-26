@@ -24,6 +24,7 @@ TIMEZONE="America/Chicago" # can be altered to your specific timezone, see http:
 
 # Site information
 SOURCE_DIR_NAME=$HOSTNAME # this is a subdirectory under /var/www
+BEHAT_DIR_NAME=${SOURCE_DIR_NAME}_behat
 DOCROOT="/var/www/$HOSTNAME/htdocs"
 # Only set one of these (svn or git)
 # SVN_URL=""
@@ -94,6 +95,7 @@ curl -sS https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
 
 echo "[vagrant provisioning] Installing drush..."
+ORIG_DIR=`pwd`
 cd /usr/local
 git clone https://github.com/drush-ops/drush.git
 cd drush
@@ -102,7 +104,47 @@ chmod a+x drush
 ln -s /usr/local/drush/drush /usr/local/bin/drush
 composer -n install
 drush help 1>/dev/null 2>&1
-cd -
+cd $ORIG_DIR
+
+echo "[vagrant provisioning] Installing java..."
+add-apt-repository -y ppa:webupd8team/java
+apt-get update
+echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
+apt-get -y install oracle-java7-installer
+
+echo "[vagrant provisioning] Installing selenium..."
+mkdir /usr/local/selenium
+wget -P /usr/local/selenium http://selenium.googlecode.com/files/selenium-server-standalone-2.39.0.jar
+
+echo "[vagrant provisioning] Installing behat..."
+mkdir /var/www/$BEHAT_DIR_NAME
+ORIG_DIR=`pwd`
+cd /var/www/$BEHAT_DIR_NAME
+cat <<EOF >composer.json
+{
+  "require": {
+    "drupal/drupal-extension": "*"
+  },
+  "config": {
+    "bin-dir": "bin/"
+  }
+}
+EOF
+composer install
+cat <<EOF >behat.yml
+default:
+  paths:
+    features: 'features'
+  extensions:
+    Behat\MinkExtension\Extension:
+      goutte: ~
+      selenium2: ~
+      base_url: http://$SITE_NAME/
+    Drupal\DrupalExtension\Extension:
+      blackbox: ~
+EOF
+cd $ORIG_DIR
 
 ##### Configuration #####
 
