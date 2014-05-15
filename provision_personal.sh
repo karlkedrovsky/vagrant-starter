@@ -8,6 +8,7 @@ sudo -u vagrant git clone -q https://github.com/karlkedrovsky/config.git /home/v
 sudo -u vagrant ln -s /home/vagrant/config/zshrc /home/vagrant/.zshrc
 sudo -u vagrant ln -s /home/vagrant/config/aliases /home/vagrant/.aliases
 sudo -u vagrant ln -s /home/vagrant/config/drush /home/vagrant/.drush
+sudo -u vagrant ln -s /home/vagrant/config/tmux.conf /home/vagrant/.tmux.conf
 
 echo "[vagrant provisioning] Setting vagrant shell to zsh..."
 chsh -s /usr/bin/zsh vagrant
