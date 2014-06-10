@@ -51,3 +51,13 @@ after the VM is started just run:
 
     mount /home/karl/mount/foo
 
+## Site Creation and Deletion Scripts
+
+There are two utility scripts that I wrote to automate the set up and
+tear down of sites, mostly for testing and demo sites that will live
+for a short time and then get deleted. Those two scripts are
+createdrupalsite.sh and deletedrupalsite.sh.
+
+If you plan on using them make sure you read and understand the
+scripts first. They may do things to your server that you would really
+rather not be done...
