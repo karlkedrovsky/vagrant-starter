@@ -90,6 +90,26 @@ drop database test;
 flush privileges;
 EOF
 
+echo "[vagrant provisioning] Installing ssmtp..."
+apt-get install -y ssmtp
+
+if [ ! -z "$GMAIL_ADDRESS" ]
+then
+  cat <<EOF >/etc/ssmtp/ssmtp.conf
+root=$GMAIL_ADDRESS
+mailhub=smtp.gmail.com:587
+rewriteDomain=$GMAIL_DOMAIN
+hostname=$GMAIL_USER
+UseSTARTTLS=YES
+AuthUser=$GMAIL_USER
+AuthPass=$GMAIL_PASSWORD
+FromLineOverride=YES
+EOF
+
+    chmod 640 /etc/ssmtp/ssmtp.conf
+    adduser www-data mail
+fi
+
 echo "[vagrant provisioning] Installing composer..."
 curl -sS https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
@@ -159,11 +179,6 @@ echo "[vagrant provisioning] Configuring ssh..."
 cat <<EOF >>/etc/ssh/ssh_config
     StrictHostKeyChecking no
 EOF
-
-echo "[vagrant provisioning] Updating php5-fpm configuration ..."
-sed 's|^listen = 127.0.0.1:9000|listen = /var/run/php-fpm.sock|' </etc/php5/fpm/pool.d/www.conf >/tmp/www.conf
-mv /tmp/www.conf /etc/php5/fpm/pool.d/www.conf
-service php5-fpm restart
 
 # Personal configuration
 if [ -e "/vagrant/provision_personal.sh" ]
@@ -242,7 +257,7 @@ server {
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         fastcgi_param DRUPAL_CONFIG /var/www/nginx/drupal-config/;
         fastcgi_intercept_errors on;
-        fastcgi_pass unix:/var/run/php-fpm.sock;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
     }
 
     # Fighting with ImageCache? This little gem is amazing.
