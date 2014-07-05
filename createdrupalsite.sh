@@ -56,9 +56,9 @@ mkdir sites/all/modules/contrib
 mkdir sites/all/modules/custom
 mkdir sites/all/modules/features
 drush si standard install_configure_form.update_status_module='array(FALSE,FALSE)' -y --account-name=admin --account-pass=admin --account-mail=karl+$SITE_NAME@kedrovsky.com --db-url=mysql://$SITE_NAME:$SITE_NAME@localhost/$SITE_NAME --site-name=$SITE_NAME --site-mail=karl+$SITE_NAME@kedrovsky.com
-drush dl admin_menu ctools views devel coder features strongarm token pathauto backup_migrate webform
+drush dl admin_menu ctools views devel coder features strongarm token pathauto backup_migrate webform module_filter
 drush dis -y toolbar
-drush en -y ctools token admin_menu admin_menu_toolbar views views_ui devel coder features strongarm pathauto backup_migrate webform
+drush en -y ctools token admin_menu admin_menu_toolbar views views_ui devel coder features strongarm pathauto backup_migrate webform module_filter
 drush cc all
 
 echo ""

@@ -90,6 +90,15 @@ drop database test;
 flush privileges;
 EOF
 
+echo "[vagrant provisioning] Installing rvm and ruby..."
+curl -L https://get.rvm.io | bash -s stable --ruby
+source /usr/local/rvm/scripts/rvm
+usermod -a -G rvm vagrant
+
+echo "[vagrant provisioning] Installing common ruby gems..."
+gem install bundler
+gem install rake
+
 echo "[vagrant provisioning] Installing ssmtp..."
 apt-get install -y ssmtp
 
@@ -136,6 +145,10 @@ apt-get -y install oracle-java7-installer
 echo "[vagrant provisioning] Installing selenium..."
 mkdir /usr/local/selenium
 wget -P /usr/local/selenium http://selenium.googlecode.com/files/selenium-server-standalone-2.39.0.jar
+
+echo "[vagrant provisioning] Creating /var/www..."
+mkdir -p /var/www
+chmod 777 /var/www
 
 echo "[vagrant provisioning] Installing behat..."
 mkdir /var/www/$BEHAT_DIR_NAME
@@ -189,8 +202,6 @@ fi
 ##### Project Setup #####
 
 echo "[vagrant provisioning] Checking out project..."
-mkdir -p /var/www
-chmod 777 /var/www
 if [ ! -z "$SVN_URL" ]
 then
   svn co --username $SVN_USER --password $SVN_PASSWORD --non-interactive --trust-server-cert $SVN_URL /var/www/$SOURCE_DIR_NAME
@@ -292,7 +303,7 @@ cat <<EOF >>/etc/exports
 /export/$SITE_NAME 10.1.0.1/24(rw,sync,all_squash,anonuid=1001,anongid=1001,no_subtree_check,insecure)
 EOF
 cat <<EOF >>/etc/fstab
-/var/www/$SOURCE_DIR_NAME    /export/$SITE_NAME   none    bind  0  0
+/var/www    /export/$SITE_NAME   none    bind  0  0
 EOF
 mount -a
 service nfs-kernel-server restart
