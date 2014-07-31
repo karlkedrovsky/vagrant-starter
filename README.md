@@ -36,7 +36,7 @@ script I've used for "real work" is the Drupal version. The Ruby and
 Node scripts are pretty basic and I've only used them for the odd
 experiment or two.
 
-## Notes
+## NFS Shares
 
 Mounting nfs shares exported by the VM works without any additional
 steps under OS X but under Linux you have to add something like the
@@ -44,12 +44,32 @@ following to /etc/fstab.
 
     10.1.0.14:/export/foo /home/karl/mount/foo nfs rw,noauto,user 0 0
 
-In this cast 10.1.0.14 is the ip of the VM, /export/foo is the
+In this case 10.1.0.14 is the ip of the VM, /export/foo is the
 exported directory in the VM and /home/karl/mount/foo is the directory
 on the host where the nfs share will be mounted. To mount the share
 after the VM is started just run:
 
     mount /home/karl/mount/foo
+
+## Livereload and Guard
+
+I use [Guard](http://guardgem.org/) along with
+[guard-livereload](https://github.com/guard/guard-livereload) running
+in the VM and to get that to work you have to set up a tunnel from the
+host to the VM. To set this up just run the following command on the
+host.
+
+    ssh -L 35729:127.0.0.1:35729 vagrant@guesthostname -N
+
+The "vagrant" user's password is "vagrant". I also had to set the host
+in the Guardfile so that it looks like this.
+
+    guard 'livereload', host: '127.0.0.1' do
+      ...
+    end
+
+A full example can be found in my
+[Drupal start theme](https://github.com/karlkedrovsky/drupal-sass-starter).
 
 ## Site Creation and Deletion Scripts
 
