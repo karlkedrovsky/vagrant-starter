@@ -129,6 +129,17 @@ mv composer.phar /usr/local/bin/composer
 echo "[vagrant provisioning] Installing drush..."
 composer global require "drush/drush:6.*"
 
+echo "[vagrant provisioning] Installing Pantheon drush components..."
+ORIG_DIR=`pwd`
+mkdir /home/vagrant/.drush
+git clone https://github.com/pantheon-systems/terminus.git /home/vagrant/.drush/terminus
+cd /home/vagrant/.drush/terminus
+composer update --no-dev
+drush cc drush
+drush dl drush_sql_sync_pipe --destination=/home/vagrant/.drush
+chown -R vagrant:vagrant /home/vagrant/.drush
+cd $ORIG_DIR
+
 echo "[vagrant provisioning] Installing java..."
 add-apt-repository -y ppa:webupd8team/java
 apt-get update
