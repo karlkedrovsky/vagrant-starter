@@ -78,7 +78,7 @@ apt-get install -y mysql-server mysql-client
 service mysql restart
 
 echo "[vagrant provisioning] Installing common packages..."
-apt-get install -y mg nginx php5-fpm php5-mysql php5-gd php5-curl php5-mcrypt php5-cli php-pear php-apc php-codecoverage phpunit-mock-object keychain zsh subversion git curl nfs-kernel-server zip unzip exuberant-ctags
+apt-get install -y mg nginx php5-fpm php5-mysql php5-gd php5-curl php5-mcrypt php5-cli php-pear php-codecoverage phpunit-mock-object keychain zsh subversion git curl nfs-kernel-server zip unzip exuberant-ctags
 
 echo "[vagrant provisioning] Securing MySQL..."
 mysql -uroot -p$MYSQL_ROOT_PASSWORD mysql <<EOF
@@ -89,6 +89,9 @@ delete from db where db like 'test%';
 drop database test;
 flush privileges;
 EOF
+
+echo "[vagrant provisioning] Configuring PHP..."
+sed -i "s/^;opcache.enable=0/opcache.enable=1/" /etc/php5/fpm/php.ini
 
 echo "[vagrant provisioning] Installing rvm and ruby..."
 curl -L https://get.rvm.io | bash -s stable --ruby
@@ -124,16 +127,7 @@ curl -sS https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
 
 echo "[vagrant provisioning] Installing drush..."
-ORIG_DIR=`pwd`
-cd /usr/local
-git clone https://github.com/drush-ops/drush.git
-cd drush
-git checkout 6.x
-chmod a+x drush
-ln -s /usr/local/drush/drush /usr/local/bin/drush
-composer -n install
-drush help 1>/dev/null 2>&1
-cd $ORIG_DIR
+composer global require "drush/drush:6.*"
 
 echo "[vagrant provisioning] Installing java..."
 add-apt-repository -y ppa:webupd8team/java
