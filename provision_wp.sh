@@ -77,7 +77,7 @@ apt-get install -y mysql-server mysql-client
 service mysql restart
 
 echo "[vagrant provisioning] Installing common packages..."
-apt-get install -y mg nginx php5-fpm php5-mysql php5-gd php5-curl php5-mcrypt php5-cli php-pear php-apc keychain zsh subversion git curl nfs-kernel-server zip unzip
+apt-get install -y mg nginx php5-fpm php5-mysql php5-gd php5-curl php5-mcrypt php5-cli php-pear php-apc keychain zsh subversion git curl nfs-kernel-server zip unzip libjpeg-progs optipng
 
 echo "[vagrant provisioning] Securing MySQL..."
 mysql -uroot -p$MYSQL_ROOT_PASSWORD mysql <<EOF

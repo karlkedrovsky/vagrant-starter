@@ -70,7 +70,7 @@ echo $TIMEZONE | tee /etc/timezone
 dpkg-reconfigure --frontend noninteractive tzdata
 
 echo "[vagrant provisioning] Installing common packages..."
-apt-get install -y mg nginx keychain zsh subversion git curl nfs-kernel-server zip unzip
+apt-get install -y mg nginx keychain zsh subversion git curl nfs-kernel-server zip unzip libjpeg-progs optipng
 
 ##### Configuration #####
 

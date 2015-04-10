@@ -70,7 +70,7 @@ apt-get update
 apt-get install -y postgresql-9.3 postresql-contrib-9.3
 
 echo "[vagrant provisioning] Installing common packages..."
-apt-get install -y mg nginx keychain zsh subversion git curl nfs-kernel-server zip unzip sqlite
+apt-get install -y mg nginx keychain zsh subversion git curl nfs-kernel-server zip unzip sqlite libjpeg-progs optipng
 
 echo "[vagrant provisioning] Installing rvm and ruby..."
 curl -L https://get.rvm.io | bash -s stable --ruby
