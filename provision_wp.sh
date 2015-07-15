@@ -169,7 +169,7 @@ server {
         #NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
         include fastcgi_params;
         fastcgi_intercept_errors on;
-        fastcgi_pass unix:/var/run/php-fpm.sock;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
     }
 
     location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
