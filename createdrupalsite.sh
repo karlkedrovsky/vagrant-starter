@@ -59,8 +59,9 @@ chmod -R a+w sites/all/modules/features
 drush si standard install_configure_form.update_status_module='array(FALSE,FALSE)' -y --account-name=admin --account-pass=admin --account-mail=karl+$SITE_NAME@kedrovsky.com --db-url=mysql://$SITE_NAME:$SITE_NAME@localhost/$SITE_NAME --site-name=$SITE_NAME --site-mail=karl+$SITE_NAME@kedrovsky.com
 drush dl admin_menu ctools views devel coder features strongarm token pathauto backup_migrate webform module_filter admin_views
 drush dis -y toolbar comment
-drush en -y ctools token admin_menu admin_menu_toolbar views views_ui devel coder features strongarm pathauto backup_migrate webform module_filter
+drush en -y ctools token admin_menu admin_menu_toolbar views views_ui devel coder features strongarm pathauto backup_migrate webform module_filter pc
 drush cc all
+drush pc-d
 
 echo ""
 echo "Fixing permissions..."
