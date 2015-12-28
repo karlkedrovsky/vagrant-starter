@@ -151,6 +151,11 @@ echo "[vagrant provisioning] Installing selenium..."
 mkdir /usr/local/selenium
 wget -P /usr/local/selenium http://selenium.googlecode.com/files/selenium-server-standalone-2.39.0.jar
 
+# echo "[vagrant provisioning] Installing node..."
+sudo add-apt-repository -y ppa:chris-lea/node.js
+sudo apt-get update
+sudo apt-get install -y nodejs
+
 echo "[vagrant provisioning] Creating /var/www..."
 mkdir -p /var/www
 chmod 777 /var/www
