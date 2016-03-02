@@ -67,8 +67,7 @@ echo "[vagrant provisioning] Installing common packages..."
 apt-get install -y mg nginx keychain zsh subversion git curl nfs-kernel-server zip unzip libjpeg-progs optipng
 
 # echo "[vagrant provisioning] Installing node..."
-sudo add-apt-repository -y ppa:chris-lea/node.js
-sudo apt-get update
+curl --silent --location https://deb.nodesource.com/setup_0.12 | sudo bash -
 sudo apt-get install -y nodejs
 
 ##### Configuration #####
